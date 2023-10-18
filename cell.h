@@ -16,8 +16,16 @@ class Cell {
 
   float get_cost();
 
-  bool operator< (Cell* cell) {
-    return (cost_ < cell->get_cost());
-  }
-  
+  friend bool operator< (const Cell right, const Cell left); 
+};
+
+struct Comp {
+    bool operator()(const Cell* a, const Cell* b)
+    {
+        if (a && b)
+        {
+            return *a < *b;
+        }
+        return a<b;
+    }
 };

@@ -37,22 +37,34 @@ Maze::Maze(string file) {
 void Maze::algoritmo() {
   
   vector<Cell*> close;
-  set<Cell*> open;
+  set<Cell*, Comp> open;
 
-  Cell* aux0 = new Cell(start_.first, start_.second, 6);
-  Cell* aux1 = new Cell(start_.first, start_.second, 1);
   Cell* aux2 = new Cell(start_.first, start_.second, 2);
+  Cell* aux1 = new Cell(start_.first, start_.second, 1);
   Cell* aux3 = new Cell(start_.first, start_.second, 3);
   Cell* aux4 = new Cell(start_.first, start_.second, 4);
+  Cell* aux0 = new Cell(start_.first, start_.second, 0);
 
+  open.insert(aux3);
+  open.insert(aux4);
+  for (Cell* cell : open) {
+    cout << cell->get_cost() << endl;
+  } 
 
-  open.insert(aux4); open.insert(aux3); 
-  open.insert(aux2); open.insert(aux1);
-  open.insert(aux0);
-  
+  open.insert(aux1); 
+  open.insert(aux2);
+  cout << endl;
   for (Cell* cell : open) {
     cout << cell->get_cost() << endl;
   }
+
+  open.insert(aux0);
+  cout << endl;
+  for (Cell* cell : open) {
+    cout << cell->get_cost() << endl;
+  }
+  
+  
 
   
 }
