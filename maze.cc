@@ -34,39 +34,269 @@ Maze::Maze(string file) {
 }
 
 
-void Maze::algoritmo() {
+Cell* Maze::algoritmo_A() {
   
-  vector<Cell*> close;
-  set<Cell*, Comp> open;
+  vector<Cell*> close;    // Conjunto de nodos cerrados
+  vector<Cell*> frontera;     // Conjunto de nodos abiertos
 
-  Cell* aux2 = new Cell(start_.first, start_.second, 2);
-  Cell* aux1 = new Cell(start_.first, start_.second, 1);
-  Cell* aux3 = new Cell(start_.first, start_.second, 3);
-  Cell* aux4 = new Cell(start_.first, start_.second, 4);
-  Cell* aux0 = new Cell(start_.first, start_.second, 0);
+  Cell* actual = new Cell(start_.first, start_.second, NULL);
+  actual->set_gn(0);
+  actual->set_hn(distancia_manhattan(actual));
+  actual->set_fn();
 
-  open.insert(aux3);
-  open.insert(aux4);
-  for (Cell* cell : open) {
-    cout << cell->get_cost() << endl;
-  } 
+  frontera.push_back(actual);
 
-  open.insert(aux1); 
-  open.insert(aux2);
-  cout << endl;
-  for (Cell* cell : open) {
-    cout << cell->get_cost() << endl;
+  while (!frontera.empty()) {
+    
+    // Obtener mejor nodo y removerlo del vector
+    actual = frontera[0];
+    int min_pos = 0;
+    for (int i = 0; i < frontera.size(); i++) {
+        if (frontera[i]->get_fn() < actual->get_fn()) {
+          actual = frontera[i];
+          min_pos = i;
+        }
+    }
+    frontera.erase(frontera.begin() + min_pos);
+
+    // Prueba de meta
+    if ((actual->get_x() == finish_.first) && (actual->get_y() == finish_.second))
+      return actual;
+
+    generar_hijos(actual, frontera);
+
+
+  }
+  
+  // Si no hay solucion devuelve el nodo con coste -1
+  actual->set_gn(-1);
+  return actual;
+  
+}
+
+void Maze::generar_hijos(Cell* actual, vector<Cell*>& frontera) {
+
+    int salida; // variable resultado del metodo comprobar_frontera()
+    if (check_norte(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }
+    }
+
+    if (check_sur(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }    
+    }
+    if (check_este(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }  
+    }
+    if (check_oeste(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }     
+    }
+    if (check_noreste(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }     
+    }
+    if (check_noroeste(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }    
+    }
+    if (check_sureste(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }      
+    }
+    if (check_suroeste(actual)) {
+      salida = comprobar_frontera(actual, frontera);
+      if (salida == - 1) {
+         
+      }
+      else {
+        // Comprobamos si su fn es menor
+      }     
+    }
+}
+
+int Maze::comprobar_frontera(Cell* actual, vector<Cell*>& frontera) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  for (int i = 0; i < frontera.size(); i++) {
+    if (pos_x == frontera[i]->get_x() && pos_y == frontera[i]->get_y())
+      return i;
   }
 
-  open.insert(aux0);
-  cout << endl;
-  for (Cell* cell : open) {
-    cout << cell->get_cost() << endl;
-  }
-  
-  
+  return -1;
+}
 
+bool Maze::check_norte(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  // Comprobacion borde superior
+  if (pos_x == 0)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x-1][pos_y] == '1')
+    return false;
   
+  return true;
+}
+
+bool Maze::check_sur(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  // Comprobacion borde inferior
+  if (pos_x == maze_.size()-1)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x+1][pos_y] == '1')
+    return false;
+  
+  return true;
+}
+
+bool Maze::check_este(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  // Comprobacion borde derecho
+  if (pos_y == maze_[pos_x].size()-1)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x][pos_y+1] == '1')
+    return false;
+  
+  return true;
+}
+
+bool Maze::check_oeste(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  // Comprobacion borde izquierdo
+  if (pos_y == 0)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x][pos_y-1] == '1')
+    return false;
+  
+  return true;
+}
+
+bool Maze::check_noreste(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+  // Comprobacion borde superior y derecho
+  if (pos_x == 0 && pos_y == maze_[pos_x].size()-1)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x+1][pos_y+1] == '1')
+    return false;
+  
+  return true;
+}
+
+bool Maze::check_noroeste(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  // Comprobacion borde superior e izquierdo
+  if (pos_x == 0 && pos_y == 0)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x-1][pos_y-1] == '1')
+    return false;
+  
+  return true;
+}
+
+bool Maze::check_sureste(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  // Comprobacion borde inferior y derecho
+  if (pos_x == maze_.size()-1 && pos_y == maze_[pos_x].size()-1)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x-1][pos_y+1] == '1')
+    return false;
+  
+  return true;
+}
+
+bool Maze::check_suroeste(Cell* actual) {
+
+  int pos_x = actual->get_x();
+  int pos_y = actual->get_y();
+
+  // Comprobacion borde inferior e izquierdo
+  if (pos_x == maze_.size()-1 && pos_y == 0)
+    return false;
+
+  // Comprobación muro
+  if (maze_[pos_x+1][pos_y-1] == '1')
+    return false;
+  
+  return true;
+}
+
+
+
+
+float Maze::distancia_manhattan(Cell* actual) {
+  return (abs(finish_.first-actual->get_x() + abs(finish_.second-actual->get_y())) * 3);
 }
 
 
