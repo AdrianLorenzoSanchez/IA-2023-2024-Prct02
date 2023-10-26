@@ -22,8 +22,8 @@ class Maze {
  public:
   Maze(string file);
   Cell* algoritmo_A();
-  void generar_hijos(Cell* actual, vector<Cell*>& frontera);
-  int comprobar_frontera(Cell* actual, vector<Cell*>& frontera);
+  void generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& cerrados);
+  int comprobar_conjunto(int x, int y, vector<Cell*>& conjunto);
 
   bool check_norte(Cell* actual);
   bool check_sur(Cell* actual);
@@ -37,6 +37,6 @@ class Maze {
   
   
   
-  float distancia_manhattan(Cell* actual);
-  void print_file();
+  float distancia_manhattan(int x, int y);
+  void print_file(Cell* meta);
 };

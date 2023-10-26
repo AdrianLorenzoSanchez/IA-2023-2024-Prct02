@@ -6,6 +6,9 @@ Maze::Maze(string file) {
   // Lectura de fichero
   file_ = file;
 
+  generated_nodes_ = 0;
+  inspected_nodes_ = 0;
+
   int rows, cols;
   ifstream fin;
   
@@ -36,129 +39,268 @@ Maze::Maze(string file) {
 
 Cell* Maze::algoritmo_A() {
   
-  vector<Cell*> close;    // Conjunto de nodos cerrados
-  vector<Cell*> frontera;     // Conjunto de nodos abiertos
+  vector<Cell*> cerrados;     // Conjunto de nodos cerrados
+  vector<Cell*> abiertos;     // Conjunto de nodos abiertos
 
-  Cell* actual = new Cell(start_.first, start_.second, NULL);
-  actual->set_gn(0);
-  actual->set_hn(distancia_manhattan(actual));
-  actual->set_fn();
+  int hn = distancia_manhattan(start_.first, start_.second);
+  Cell* actual = new Cell(start_.first, start_.second, 0, hn, hn, NULL);
 
-  frontera.push_back(actual);
+  abiertos.push_back(actual);
+  generated_nodes_++;
 
-  while (!frontera.empty()) {
+  while (!abiertos.empty()) {
     
-    // Obtener mejor nodo y removerlo del vector
-    actual = frontera[0];
+    // Obtener mejor nodo de los abiertos y removerlo del vector
+    actual = abiertos[0];
     int min_pos = 0;
-    for (int i = 0; i < frontera.size(); i++) {
-        if (frontera[i]->get_fn() < actual->get_fn()) {
-          actual = frontera[i];
+    for (int i = 0; i < abiertos.size(); i++) {
+        if (abiertos[i]->get_fn() < actual->get_fn()) {
+          actual = abiertos[i];
           min_pos = i;
         }
     }
-    frontera.erase(frontera.begin() + min_pos);
+    abiertos.erase(abiertos.begin() + min_pos);
 
-    // Prueba de meta
-    if ((actual->get_x() == finish_.first) && (actual->get_y() == finish_.second))
+
+    // Añadir nodo actual a los cerrados y prueba de meta
+    cerrados.push_back(actual);
+    inspected_nodes_++;
+    if ((actual->get_x() == finish_.first) && (actual->get_y() == finish_.second)) 
       return actual;
-
-    generar_hijos(actual, frontera);
+    
+    generar_hijos(actual, abiertos, cerrados);
 
 
   }
   
   // Si no hay solucion devuelve el nodo con coste -1
-  actual->set_gn(-1);
+  actual->set_fn(-1);
   return actual;
   
 }
 
-void Maze::generar_hijos(Cell* actual, vector<Cell*>& frontera) {
+void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& cerrados) {
 
-    int salida; // variable resultado del metodo comprobar_frontera()
+    int salida; // variable resultado del metodo comprobar_conjunto()
+    int pos_x = actual->get_x();
+    int pos_y = actual->get_y();
+    float gn = actual->get_gn();
+    float hn;
+    float fn;
+    
     if (check_norte(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
+      
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x-1, pos_y, cerrados) == -1) {
+        
+        hn = distancia_manhattan(pos_x-1, pos_y); // usar operador ternario ? para la otra hn
+        fn = gn+5 + hn;
+
+        salida = comprobar_conjunto(pos_x-1, pos_y, abiertos);
+        if (salida == - 1) { 
+          abiertos.push_back(new Cell(pos_x-1, pos_y, gn+5, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+5);
+            generated_nodes_++;
+          }
+
+        }
       }
-      else {
-        // Comprobamos si su fn es menor
-      }
+
     }
 
     if (check_sur(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
+
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x+1, pos_y, cerrados) == -1) {
+
+        hn = distancia_manhattan(pos_x+1, pos_y); // usar operador ternario ? para la otra hn
+        fn = gn+5 + hn;
+        salida = comprobar_conjunto(pos_x+1, pos_y, abiertos);
+
+        if (salida == - 1) {
+          abiertos.push_back(new Cell(pos_x+1, pos_y, gn+5, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+5);
+            generated_nodes_++;
+          }
+
+        }    
       }
-      else {
-        // Comprobamos si su fn es menor
-      }    
     }
+
     if (check_este(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
-      }
-      else {
-        // Comprobamos si su fn es menor
+
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x, pos_y+1, cerrados) == -1) {
+
+        hn = distancia_manhattan(pos_x, pos_y+1); // usar operador ternario ? para la otra hn
+        fn = gn+5 + hn;
+        salida = comprobar_conjunto(pos_x, pos_y+1, abiertos);
+
+        if (salida == - 1) {
+          abiertos.push_back(new Cell(pos_x, pos_y+1, gn+5, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+5);
+            generated_nodes_++;
+          }
+        } 
+      } 
+
+    }
+
+    if (check_oeste(actual)) {
+
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x, pos_y-1, cerrados) == -1) {
+
+        hn = distancia_manhattan(pos_x, pos_y-1); // usar operador ternario ? para la otra hn
+        fn = gn+5 + hn;
+        salida = comprobar_conjunto(pos_x, pos_y-1, abiertos);
+
+        if (salida == - 1) {  
+          abiertos.push_back(new Cell(pos_x, pos_y-1, gn+5, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+5);
+            generated_nodes_++;
+          }
+        }
+      } 
+
+    }
+
+    if (check_noreste(actual)) {
+
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x-1, pos_y+1, cerrados) == -1) {
+
+        hn = distancia_manhattan(pos_x-1, pos_y+1); // usar operador ternario ? para la otra hn
+        fn = gn+7 + hn;
+        salida = comprobar_conjunto(pos_x-1, pos_y+1, abiertos);
+
+        if (salida == - 1) {
+          abiertos.push_back(new Cell(pos_x-1, pos_y+1, gn+7, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+7);
+            generated_nodes_++;
+
+          }
+        } 
+      }    
+
+    }
+
+    if (check_noroeste(actual)) {
+
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x-1, pos_y-1, cerrados) == -1) {
+
+        hn = distancia_manhattan(pos_x-1, pos_y-1); // usar operador ternario ? para la otra hn
+        fn = gn+7 + hn;
+        salida = comprobar_conjunto(pos_x-1, pos_y-1, abiertos);
+
+        if (salida == - 1) {        
+          abiertos.push_back(new Cell(pos_x-1, pos_y-1, gn+7, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+7);
+            generated_nodes_++;
+          }
+        }
       }  
     }
-    if (check_oeste(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
-      }
-      else {
-        // Comprobamos si su fn es menor
-      }     
-    }
-    if (check_noreste(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
-      }
-      else {
-        // Comprobamos si su fn es menor
-      }     
-    }
-    if (check_noroeste(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
-      }
-      else {
-        // Comprobamos si su fn es menor
+
+    if (check_sureste(actual)) {
+
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x+1, pos_y+1, cerrados) == -1) {
+
+        hn = distancia_manhattan(pos_x+1, pos_y+1); // usar operador ternario ? para la otra hn
+        fn = gn+7 + hn;
+        salida = comprobar_conjunto(pos_x+1, pos_y+1, abiertos);
+
+        if (salida == - 1) {
+          abiertos.push_back(new Cell(pos_x+1, pos_y+1, gn+7, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+7);
+            generated_nodes_++;
+          }
+        }
       }    
     }
-    if (check_sureste(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
-      }
-      else {
-        // Comprobamos si su fn es menor
-      }      
-    }
+
     if (check_suroeste(actual)) {
-      salida = comprobar_frontera(actual, frontera);
-      if (salida == - 1) {
-         
-      }
-      else {
-        // Comprobamos si su fn es menor
-      }     
+
+      // Comprobar si el nodo a generar esta en el conjunto de cerrados
+      if (comprobar_conjunto(pos_x+1, pos_y-1, cerrados) == -1) {
+
+        hn = distancia_manhattan(pos_x+1, pos_y-1); // usar operador ternario ? para la otra hn
+        fn = gn+7 + hn;
+        salida = comprobar_conjunto(pos_x+1, pos_y-1, abiertos);
+
+        if (salida == - 1) { 
+          abiertos.push_back(new Cell(pos_x+1, pos_y-1, gn+7, hn, fn, actual));
+          generated_nodes_++;
+        }
+        else {
+          // Si fn del nodo que se esta evaluando es menor al fn del nodo de la abiertos 
+          if (fn < abiertos[salida]->get_fn()) {
+            abiertos[salida]->set_parent(actual);
+            abiertos[salida]->set_fn(fn);
+            abiertos[salida]->set_gn(gn+7);
+            generated_nodes_++;
+          }
+        }  
+      }   
     }
+
 }
 
-int Maze::comprobar_frontera(Cell* actual, vector<Cell*>& frontera) {
+int Maze::comprobar_conjunto(int x, int y, vector<Cell*>& conjunto) {
 
-  int pos_x = actual->get_x();
-  int pos_y = actual->get_y();
-
-  for (int i = 0; i < frontera.size(); i++) {
-    if (pos_x == frontera[i]->get_x() && pos_y == frontera[i]->get_y())
+  for (int i = 0; i < conjunto.size(); i++) {
+    if (x == conjunto[i]->get_x() && y == conjunto[i]->get_y())
       return i;
   }
 
@@ -234,11 +376,11 @@ bool Maze::check_noreste(Cell* actual) {
   int pos_x = actual->get_x();
   int pos_y = actual->get_y();
   // Comprobacion borde superior y derecho
-  if (pos_x == 0 && pos_y == maze_[pos_x].size()-1)
+  if (pos_x == 0 || pos_y == maze_[pos_x].size()-1)
     return false;
 
   // Comprobación muro
-  if (maze_[pos_x+1][pos_y+1] == '1')
+  if (maze_[pos_x-1][pos_y+1] == '1')
     return false;
   
   return true;
@@ -250,7 +392,7 @@ bool Maze::check_noroeste(Cell* actual) {
   int pos_y = actual->get_y();
 
   // Comprobacion borde superior e izquierdo
-  if (pos_x == 0 && pos_y == 0)
+  if (pos_x == 0 || pos_y == 0)
     return false;
 
   // Comprobación muro
@@ -266,11 +408,11 @@ bool Maze::check_sureste(Cell* actual) {
   int pos_y = actual->get_y();
 
   // Comprobacion borde inferior y derecho
-  if (pos_x == maze_.size()-1 && pos_y == maze_[pos_x].size()-1)
+  if (pos_x == maze_.size()-1 || pos_y == maze_[pos_x].size()-1)
     return false;
 
   // Comprobación muro
-  if (maze_[pos_x-1][pos_y+1] == '1')
+  if (maze_[pos_x+1][pos_y+1] == '1')
     return false;
   
   return true;
@@ -282,7 +424,7 @@ bool Maze::check_suroeste(Cell* actual) {
   int pos_y = actual->get_y();
 
   // Comprobacion borde inferior e izquierdo
-  if (pos_x == maze_.size()-1 && pos_y == 0)
+  if (pos_x == maze_.size()-1 || pos_y == 0)
     return false;
 
   // Comprobación muro
@@ -295,21 +437,59 @@ bool Maze::check_suroeste(Cell* actual) {
 
 
 
-float Maze::distancia_manhattan(Cell* actual) {
-  return (abs(finish_.first-actual->get_x() + abs(finish_.second-actual->get_y())) * 3);
+float Maze::distancia_manhattan(int x, int y) {
+  int expresion1 = abs(finish_.first-x);
+  int expresion2 = abs(finish_.second-y);
+  
+  return ( (expresion1 + expresion2) * 3);
 }
 
 
 
-void Maze::print_file() {
-  for (int i=0; i<maze_.size(); i++) {
-    for (int j=0; j<maze_[i].size(); j++) 
-      cout << maze_[i][j] << " ";
+void Maze::print_file(Cell* meta) {
+
+  cout << "Instancia: " << file_ << endl;
+  cout << "Filas: " << maze_.size() << " " << "Columnas: " << maze_[0].size() << endl;
+  cout << "Entrada / Salida: " <<  "(" << start_.first << "," << start_.second << ") / ("
+       << finish_.first << "," << finish_.second << ")" << endl;
+
+  int coste_camino = meta->get_fn();
+  if ( coste_camino == -1) {
+    for (int i=0; i<maze_.size(); i++) {
+      for (int j=0; j<maze_[i].size(); j++) 
+        cout << maze_[i][j] << " ";
     cout << endl;
+    }
+    cout << "No hay solucion" << endl;
   }
-  cout << "(" << start_.first << "," << start_.second << ")" << endl;
-  cout << "(" << finish_.first << "," << finish_.second << ")" << endl;
+
+  else {
+    // Almacenamos la solucion en el vector
+    vector<Cell*> camino;
+    while (meta->get_parent() != NULL) {
+      camino.push_back(meta);
+      maze_[meta->get_x()][meta->get_y()] = '*';
+      meta = meta->get_parent();
+    }
+    camino.push_back(meta);
+
+    // Imprimimos el laberinto resultado
+    for (int i=0; i<maze_.size(); i++) {
+      for (int j=0; j<maze_[i].size(); j++) 
+        cout << maze_[i][j] << " ";
+      cout << endl;
+    }
+
+    // Imprimimos el camino
+    cout << "Camino: ";
+    for (int i = camino.size()-1; i >= 0; i--) {
+      cout << "(" << camino[i]->get_x() << "," << camino[i]->get_y() << ") -> ";
+    }
+    cout << "Coste: " << coste_camino << endl;
+
+  }
+
+  cout << "Nodos generados: " << generated_nodes_ << endl;
+  cout << "Nodos inspeccionados: " << inspected_nodes_ << endl;
+
 }
-
-
-

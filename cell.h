@@ -15,17 +15,19 @@ class Cell {
 
 
  public:        
-  Cell(int x, int y, Cell* parent);
+  Cell(int x, int y, float gn, float hn, float fn, Cell* parent);
 
   int get_x();
   int get_y();
   float get_gn();
   float get_hn();
   float get_fn();
+  Cell* get_parent();
 
   void set_gn(float gn);
   void set_hn(float hn);
-  void set_fn();
+  void set_fn(float fn);
+  void set_parent(Cell* parent);
 
   
 
