@@ -43,11 +43,11 @@ Cell* Maze::algoritmo_A() {
   vector<Cell*> cerrados;     // Conjunto de nodos cerrados
   vector<Cell*> abiertos;     // Conjunto de nodos abiertos
 
+  // Evaluamos el nodo raiz y lo metemosen el conjunto de nodos abiertos
   int hn = distancia_manhattan(start_.first, start_.second);
   Cell* actual = new Cell(start_.first, start_.second, 0, hn, hn, NULL);
-
   abiertos.push_back(actual);
-  generated_nodes_++;
+  generated_nodes_++; // Aumentamos contador generados
 
   while (!abiertos.empty()) {
     
@@ -65,10 +65,11 @@ Cell* Maze::algoritmo_A() {
 
     // Añadir nodo actual a los cerrados y prueba de meta
     cerrados.push_back(actual);
-    inspected_nodes_++;
+    inspected_nodes_++; // Aumentamos el contador de inspeccionados 
     if ((actual->get_x() == finish_.first) && (actual->get_y() == finish_.second)) 
       return actual;
     
+    // Generamos los hijos del nodo actual
     generar_hijos(actual, abiertos, cerrados);
 
 
@@ -94,7 +95,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x-1, pos_y, cerrados) == -1) {
         
-        hn = heuristica(pos_x-1, pos_y); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x-1, pos_y); 
         fn = gn+5 + hn;
 
         salida = comprobar_conjunto(pos_x-1, pos_y, abiertos);
@@ -121,7 +122,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x+1, pos_y, cerrados) == -1) {
 
-        hn = heuristica(pos_x+1, pos_y); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x+1, pos_y); 
         fn = gn+5 + hn;
         salida = comprobar_conjunto(pos_x+1, pos_y, abiertos);
 
@@ -147,7 +148,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x, pos_y+1, cerrados) == -1) {
 
-        hn = heuristica(pos_x, pos_y+1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x, pos_y+1); 
         fn = gn+5 + hn;
         salida = comprobar_conjunto(pos_x, pos_y+1, abiertos);
 
@@ -173,7 +174,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x, pos_y-1, cerrados) == -1) {
 
-        hn = heuristica(pos_x, pos_y-1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x, pos_y-1); 
         fn = gn+5 + hn;
         salida = comprobar_conjunto(pos_x, pos_y-1, abiertos);
 
@@ -199,7 +200,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x-1, pos_y+1, cerrados) == -1) {
 
-        hn = heuristica(pos_x-1, pos_y+1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x-1, pos_y+1); 
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x-1, pos_y+1, abiertos);
 
@@ -226,7 +227,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x-1, pos_y-1, cerrados) == -1) {
 
-        hn = heuristica(pos_x-1, pos_y-1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x-1, pos_y-1); 
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x-1, pos_y-1, abiertos);
 
@@ -251,7 +252,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x+1, pos_y+1, cerrados) == -1) {
 
-        hn = heuristica(pos_x+1, pos_y+1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x+1, pos_y+1); 
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x+1, pos_y+1, abiertos);
 
@@ -276,7 +277,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x+1, pos_y-1, cerrados) == -1) {
 
-        hn = heuristica(pos_x+1, pos_y-1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x+1, pos_y-1); 
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x+1, pos_y-1, abiertos);
 

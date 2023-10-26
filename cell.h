@@ -6,12 +6,12 @@ using namespace std;
 
 class Cell {
  private:
-  int x_;
-  int y_;  
-  float gn_;
-  float hn_;  
-  float fn_;  
-  Cell* parent_;
+  int x_;         // Posicion x del laberinto
+  int y_;         // Posicion y del laberinto
+  float gn_;      // Coste gn del nodo
+  float hn_;      // Coste hn del nodo
+  float fn_;      // Coste fn del nodo
+  Cell* parent_;  // Puntero al padre del nodo
 
 
  public:        
@@ -30,21 +30,5 @@ class Cell {
   void set_parent(Cell* parent);
 
   
-
-  //friend bool operator< (const Cell right, const Cell left); 
 };
 
-/*bool operator< (const Cell left, const Cell right) {
-  return (left.fn_ < right.fn_);
-}
-
-struct Comp {
-    bool operator()(const Cell* a, const Cell* b)
-    {
-        if (a && b)
-        {
-            return *a < *b;
-        }
-        return a<b;
-    }
-};*/
