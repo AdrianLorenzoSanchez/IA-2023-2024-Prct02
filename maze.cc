@@ -1,10 +1,11 @@
 #include "maze.h"
 
 
-Maze::Maze(string file) {
+Maze::Maze(string file, int heuristica) {
 
   // Lectura de fichero
   file_ = file;
+  heuristica_ = heuristica;
 
   generated_nodes_ = 0;
   inspected_nodes_ = 0;
@@ -93,7 +94,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x-1, pos_y, cerrados) == -1) {
         
-        hn = distancia_manhattan(pos_x-1, pos_y); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x-1, pos_y); // usar operador ternario ? para la otra hn
         fn = gn+5 + hn;
 
         salida = comprobar_conjunto(pos_x-1, pos_y, abiertos);
@@ -120,7 +121,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x+1, pos_y, cerrados) == -1) {
 
-        hn = distancia_manhattan(pos_x+1, pos_y); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x+1, pos_y); // usar operador ternario ? para la otra hn
         fn = gn+5 + hn;
         salida = comprobar_conjunto(pos_x+1, pos_y, abiertos);
 
@@ -146,7 +147,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x, pos_y+1, cerrados) == -1) {
 
-        hn = distancia_manhattan(pos_x, pos_y+1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x, pos_y+1); // usar operador ternario ? para la otra hn
         fn = gn+5 + hn;
         salida = comprobar_conjunto(pos_x, pos_y+1, abiertos);
 
@@ -172,7 +173,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x, pos_y-1, cerrados) == -1) {
 
-        hn = distancia_manhattan(pos_x, pos_y-1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x, pos_y-1); // usar operador ternario ? para la otra hn
         fn = gn+5 + hn;
         salida = comprobar_conjunto(pos_x, pos_y-1, abiertos);
 
@@ -198,7 +199,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x-1, pos_y+1, cerrados) == -1) {
 
-        hn = distancia_manhattan(pos_x-1, pos_y+1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x-1, pos_y+1); // usar operador ternario ? para la otra hn
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x-1, pos_y+1, abiertos);
 
@@ -225,7 +226,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x-1, pos_y-1, cerrados) == -1) {
 
-        hn = distancia_manhattan(pos_x-1, pos_y-1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x-1, pos_y-1); // usar operador ternario ? para la otra hn
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x-1, pos_y-1, abiertos);
 
@@ -250,7 +251,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x+1, pos_y+1, cerrados) == -1) {
 
-        hn = distancia_manhattan(pos_x+1, pos_y+1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x+1, pos_y+1); // usar operador ternario ? para la otra hn
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x+1, pos_y+1, abiertos);
 
@@ -275,7 +276,7 @@ void Maze::generar_hijos(Cell* actual, vector<Cell*>& abiertos, vector<Cell*>& c
       // Comprobar si el nodo a generar esta en el conjunto de cerrados
       if (comprobar_conjunto(pos_x+1, pos_y-1, cerrados) == -1) {
 
-        hn = distancia_manhattan(pos_x+1, pos_y-1); // usar operador ternario ? para la otra hn
+        hn = heuristica(pos_x+1, pos_y-1); // usar operador ternario ? para la otra hn
         fn = gn+7 + hn;
         salida = comprobar_conjunto(pos_x+1, pos_y-1, abiertos);
 
@@ -434,33 +435,73 @@ bool Maze::check_suroeste(Cell* actual) {
   return true;
 }
 
+void Maze::cambiar_entrada_salida(int x1, int y1, int x2, int y2) {
 
+  // Cambiamos entrada y salida por un muro
+  maze_[start_.first][start_.second] = '1';
+  maze_[finish_.first][finish_.second] = '1';
+
+  // Añadimos la nueva entrada salida
+  maze_[x1][y1] = '3';
+  maze_[x2][y2] = '4';
+
+  start_.first = x1; start_.second = y1;
+  finish_.first = x2; finish_.second = y2;
+
+
+}
+
+
+float Maze::heuristica(int x, int y) {
+  if (heuristica_ == 1) {
+    return distancia_manhattan(x, y);
+  }
+  else if (heuristica_ == 2) {
+    return distancia_euclidia(x, y);
+  }
+  else {
+    return -1;
+  }
+
+}
 
 
 float Maze::distancia_manhattan(int x, int y) {
-  int expresion1 = abs(finish_.first-x);
-  int expresion2 = abs(finish_.second-y);
+  float expresion1 = abs(finish_.first-x);
+  float expresion2 = abs(finish_.second-y);
   
   return ( (expresion1 + expresion2) * 3);
 }
 
+float Maze::distancia_euclidia(int x, int y) {
+  int expresion1 = pow((finish_.first-x), 2);
+  int expresion2 = pow((finish_.second-y), 2);
+  float expresion3 = sqrt(expresion1 + expresion2);
+  
+  return (expresion3 * 3);
+}
 
 
 void Maze::print_file(Cell* meta) {
 
-  cout << "Instancia: " << file_ << endl;
-  cout << "Filas: " << maze_.size() << " " << "Columnas: " << maze_[0].size() << endl;
-  cout << "Entrada / Salida: " <<  "(" << start_.first << "," << start_.second << ") / ("
+  string file = "salida" + file_;
+  ofstream fout(file, ios::app);
+
+  fout << "Instancia: " << file_;
+  if (heuristica_ == 1) fout << " Manhattan" << endl;
+  if (heuristica_ == 2) fout << " Euclidia" << endl;
+  fout << "Filas: " << maze_.size() << " " << "Columnas: " << maze_[0].size() << endl;
+  fout << "Entrada / Salida: " <<  "(" << start_.first << "," << start_.second << ") / ("
        << finish_.first << "," << finish_.second << ")" << endl;
 
   int coste_camino = meta->get_fn();
   if ( coste_camino == -1) {
     for (int i=0; i<maze_.size(); i++) {
       for (int j=0; j<maze_[i].size(); j++) 
-        cout << maze_[i][j] << " ";
-    cout << endl;
+        fout << maze_[i][j] << " ";
+    fout << endl;
     }
-    cout << "No hay solucion" << endl;
+    fout << "No hay solucion" << endl;
   }
 
   else {
@@ -471,25 +512,28 @@ void Maze::print_file(Cell* meta) {
       maze_[meta->get_x()][meta->get_y()] = '*';
       meta = meta->get_parent();
     }
+    maze_[meta->get_x()][meta->get_y()] = '*';
     camino.push_back(meta);
 
     // Imprimimos el laberinto resultado
     for (int i=0; i<maze_.size(); i++) {
       for (int j=0; j<maze_[i].size(); j++) 
-        cout << maze_[i][j] << " ";
-      cout << endl;
+        fout << maze_[i][j] << " ";
+      fout << endl;
     }
 
     // Imprimimos el camino
-    cout << "Camino: ";
+    fout << "Camino: ";
     for (int i = camino.size()-1; i >= 0; i--) {
-      cout << "(" << camino[i]->get_x() << "," << camino[i]->get_y() << ") -> ";
+      fout << "(" << camino[i]->get_x() << "," << camino[i]->get_y() << ") -> ";
     }
-    cout << "Coste: " << coste_camino << endl;
+    fout << endl << "Coste: " << coste_camino << endl;
 
   }
 
-  cout << "Nodos generados: " << generated_nodes_ << endl;
-  cout << "Nodos inspeccionados: " << inspected_nodes_ << endl;
+  fout << "Nodos generados: " << generated_nodes_ << endl;
+  fout << "Nodos inspeccionados: " << inspected_nodes_ << endl;
+
+  fout << endl << endl;
 
 }
