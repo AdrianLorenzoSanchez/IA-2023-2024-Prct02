@@ -39,7 +39,7 @@ Maze::Maze(string file, int heuristica) {
 
 
 Cell* Maze::algoritmo_A() {
-  
+
   vector<Cell*> cerrados;     // Conjunto de nodos cerrados
   vector<Cell*> abiertos;     // Conjunto de nodos abiertos
 
@@ -51,17 +51,48 @@ Cell* Maze::algoritmo_A() {
 
   while (!abiertos.empty()) {
     
-    // Obtener mejor nodo de los abiertos y removerlo del vector
-    actual = abiertos[0];
-    int min_pos = 0;
-    for (int i = 0; i < abiertos.size(); i++) {
-        if (abiertos[i]->get_fn() < actual->get_fn()) {
-          actual = abiertos[i];
-          min_pos = i;
+    
+    if (abiertos.size() < 3) {
+      // Obtener mejor nodo de los abiertos y removerlo del vector
+        actual = abiertos[0];
+        int min_pos = 0;
+        for (int i = 0; i < abiertos.size(); i++) {
+            if (abiertos[i]->get_fn() < actual->get_fn()) {
+              actual = abiertos[i];
+              min_pos = i;
+            }
         }
+        abiertos.erase(abiertos.begin() + min_pos);
     }
-    abiertos.erase(abiertos.begin() + min_pos);
+    else {
 
+      vector<Cell*> modificacion;
+      // Obtengo los tres mejores nodos y los almaceno en modificacion
+      for (int i = 0; i < 3; i++) {
+        // Obtener mejor nodo de los abiertos y removerlo del vector
+        actual = abiertos[0];
+        int min_pos = 0;
+        for (int i = 0; i < abiertos.size(); i++) {
+            if (abiertos[i]->get_fn() < actual->get_fn()) {
+              actual = abiertos[i];
+              min_pos = i;
+            }
+        }
+        abiertos.erase(abiertos.begin() + min_pos);
+        modificacion.push_back(actual);
+      }
+
+      // Elegir aleatoriamente 1 de los 3 nodos y lo eliminamos del vector
+      int num_aleatorio = rand()%3;
+      actual = modificacion[num_aleatorio];
+      modificacion.erase(modificacion.begin() + num_aleatorio);
+
+      // Volver a añadir los demas nodos al conjunto de abiertos y resetear el vector
+      for (int i = 0; i < modificacion.size(); i++)
+        abiertos.push_back(modificacion[i]);
+      modificacion.clear();
+
+    }
 
     // Añadir nodo actual a los cerrados y prueba de meta
     cerrados.push_back(actual);
@@ -483,10 +514,12 @@ float Maze::distancia_euclidia(int x, int y) {
 }
 
 
-void Maze::print_file(Cell* meta) {
+void Maze::print_file(Cell* meta, int iter) {
 
   string file = "salida" + file_;
   ofstream fout(file, ios::app);
+
+  fout << "Iteracion: " << iter << endl;
 
   fout << "Instancia: " << file_;
   if (heuristica_ == 1) fout << " Manhattan" << endl;

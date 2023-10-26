@@ -1,3 +1,4 @@
+Iteracion: 0
 Instancia: M_1.txt Manhattan
 Filas: 11 Columnas: 10
 Entrada / Salida: (4,0) / (5,9)
@@ -14,7 +15,196 @@ Entrada / Salida: (4,0) / (5,9)
 1 1 1 1 1 1 1 1 1 1 
 Camino: (4,0) -> (5,1) -> (5,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
 Coste: 47
-Nodos generados: 37
-Nodos inspeccionados: 24
+Nodos generados: 35
+Nodos inspeccionados: 22
+
+
+Iteracion: 1
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 0 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (4,1) -> (4,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 69
+Nodos inspeccionados: 45
+
+
+Iteracion: 2
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 0 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (4,1) -> (4,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 103
+Nodos inspeccionados: 68
+
+
+Iteracion: 3
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 * 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (4,1) -> (4,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (6,8) -> (5,9) -> 
+Coste: 51
+Nodos generados: 144
+Nodos inspeccionados: 94
+
+
+Iteracion: 4
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 * 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (5,1) -> (5,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 180
+Nodos inspeccionados: 116
+
+
+Iteracion: 5
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 * 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (4,1) -> (4,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 217
+Nodos inspeccionados: 140
+
+
+Iteracion: 6
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 * 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (4,1) -> (4,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 253
+Nodos inspeccionados: 162
+
+
+Iteracion: 7
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 * 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (4,1) -> (4,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 289
+Nodos inspeccionados: 185
+
+
+Iteracion: 8
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 * 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (5,1) -> (5,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 329
+Nodos inspeccionados: 211
+
+
+Iteracion: 9
+Instancia: M_1.txt Manhattan
+Filas: 11 Columnas: 10
+Entrada / Salida: (4,0) / (5,9)
+1 1 1 1 1 1 1 1 1 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 1 0 0 1 
+* * * 1 1 1 1 0 0 1 
+1 * * * * * * * * * 
+1 0 0 0 0 0 0 0 * 1 
+1 0 0 1 1 1 1 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 0 0 1 0 0 0 0 0 1 
+1 1 1 1 1 1 1 1 1 1 
+Camino: (4,0) -> (4,1) -> (4,2) -> (5,3) -> (5,4) -> (5,5) -> (5,6) -> (5,7) -> (5,8) -> (5,9) -> 
+Coste: 47
+Nodos generados: 366
+Nodos inspeccionados: 236
 
 

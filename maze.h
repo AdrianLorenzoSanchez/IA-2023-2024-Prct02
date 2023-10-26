@@ -2,6 +2,8 @@
 #include <vector>
 #include <set>
 #include <cmath>
+#include <stdlib.h>
+#include <time.h>
 
 #include "cell.h"
 
@@ -41,5 +43,5 @@ class Maze {
   float heuristica(int x, int y);
   float distancia_manhattan(int x, int y);
   float distancia_euclidia(int x, int y);
-  void print_file(Cell* meta);
+  void print_file(Cell* meta, int iter);
 };

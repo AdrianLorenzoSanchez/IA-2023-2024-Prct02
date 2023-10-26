@@ -1,7 +1,10 @@
+
 #include "maze.h"
 
 
 int main() {
+
+  srand(time(NULL));
 
   int heuristica;
   string fichero;
@@ -21,9 +24,10 @@ int main() {
         cout << "Salida: "; cin >> x2 >> y2;
         maze.cambiar_entrada_salida(x1, y1, x2, y2);
       }
-      Cell* cell = maze.algoritmo_A();
-      maze.print_file(cell);
-
+      for (int i = 0; i < 10; i++) {
+        Cell* cell = maze.algoritmo_A();
+        maze.print_file(cell, i);
+      }
     }
 
   }
